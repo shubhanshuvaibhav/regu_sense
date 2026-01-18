@@ -1,0 +1,9 @@
+regu_sense:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../regu_sense.duckdb
+      threads: 1
+      timeout_seconds: 300
+      schema: analytics

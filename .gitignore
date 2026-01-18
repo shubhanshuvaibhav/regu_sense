@@ -1,0 +1,108 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Database files
+*.duckdb
+*.duckdb.wal
+*.db
+*.db-shm
+*.db-wal
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# dbt
+dbt_project/logs/
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/.user.yml
+
+# Airflow
+airflow.db
+airflow-webserver.pid
+airflow.cfg
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+*~
+
+# Pinecone/Vector DB caches
+.pinecone/
+
+# Cost tracking (if stored locally)
+cost_tracker.json
+usage_logs/
+
+# Documentation
+docs/

@@ -1,0 +1,81 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw data layer containing Federal Register documents
+    database: null  # Uses dbt's configured database
+    schema: main    # DuckDB's default schema
+    tables:
+      - name: raw_regulations
+        description: Raw Federal Register documents ingested from the API
+        columns:
+          - name: document_number
+            description: Unique identifier for the document
+            data_tests:
+              - unique
+              - not_null
+          - name: title
+            description: Title of the regulatory document
+            data_tests:
+              - not_null
+          - name: abstract
+            description: Abstract or summary of the regulatory document
+          - name: html_url
+            description: URL to the HTML version of the document
+          - name: publication_date
+            description: Date and time when the document was published
+          - name: ingestion_timestamp
+            description: Timestamp when the document was ingested into the database
+
+models:
+  - name: fct_regulatory_updates
+    description: |
+      Gold layer fact table containing cleaned regulatory updates from the Federal Register.
+      This table includes:
+      - Cleaned abstract text with HTML tags and entities removed
+      - Risk level classification based on keywords in the abstract
+      - Publication date and ingestion metadata
+    
+    columns:
+      - name: document_number
+        description: Unique identifier for the regulatory document (primary key)
+        data_tests:
+          - unique:
+              config:
+                severity: error
+          - not_null:
+              config:
+                severity: error
+      
+      - name: title
+        description: Title of the regulatory document
+        data_tests:
+          - not_null:
+              config:
+                severity: error
+      
+      - name: abstract
+        description: |
+          Cleaned abstract text with:
+          - HTML tags removed
+          - HTML entities decoded (&nbsp;, &lt;, etc.)
+          - Extra whitespace normalized to single spaces
+          - Leading/trailing whitespace trimmed
+      
+      - name: risk_level
+        description: |
+          Risk classification based on abstract content:
+          - High: Contains keywords like 'penalty', 'enforcement', or 'prohibition'
+          - Medium: Contains keywords like 'compliance' or 'requirement'
+          - Low: Does not contain above keywords
+        data_tests:
+          - accepted_values:
+              values: ['High', 'Medium', 'Low']
+              config:
+                severity: warn
+      
+      - name: publication_date
+        description: Date and time when the document was published
+      
+      - name: dbt_updated_at
+        description: Timestamp when this record was last updated by dbt
