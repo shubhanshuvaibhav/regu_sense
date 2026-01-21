@@ -29,10 +29,9 @@ def main():
         
         # Step 1: Fetch documents from API
         logger.info("\n[STEP 1] Fetching documents from Federal Register API...")
-        logger.info("Date range: January 1, 2025 to January 1, 2026 (365 days)")
         documents_with_scores = fetch_federal_register_documents(
             keyword="Artificial Intelligence",
-            days_back=365,  # Full year of data
+            days_back=30,
             timeout=15,
             significant_only=False  # Include all documents, not just significant ones
         )
