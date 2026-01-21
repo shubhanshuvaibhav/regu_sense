@@ -4,9 +4,9 @@
 .env.*.local
 *.env
 
-# Database files
-*.duckdb
-*.duckdb.wal
+# Database files (commented out for Streamlit Cloud deployment)
+# *.duckdb
+# *.duckdb.wal
 *.db
 *.db-shm
 *.db-wal

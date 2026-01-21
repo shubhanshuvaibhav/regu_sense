@@ -257,8 +257,10 @@ def fetch_federal_register_documents(
     
     documents = []
     session = create_session_with_retries()
+    all_results = []
     
     try:
+        # First request to get total count
         response = session.get(base_url, params=params, timeout=timeout)
         response.raise_for_status()
         
@@ -269,9 +271,29 @@ def fetch_federal_register_documents(
             logger.error(f"Invalid JSON response from API: {e}")
             raise ValueError(f"Failed to parse API response as JSON: {e}")
         
-        # Extract results
+        # Get pagination info
+        total_count = data.get("count", 0)
         results = data.get("results", [])
-        logger.info(f"Retrieved {len(results)} documents from API")
+        all_results.extend(results)
+        
+        logger.info(f"Total documents available: {total_count}")
+        logger.info(f"Retrieved page 1: {len(results)} documents")
+        
+        # Fetch remaining pages if needed
+        total_pages = math.ceil(total_count / params["per_page"])
+        if total_pages > 1:
+            logger.info(f"Fetching {total_pages - 1} more pages...")
+            for page in range(2, total_pages + 1):
+                params["page"] = page
+                response = session.get(base_url, params=params, timeout=timeout)
+                response.raise_for_status()
+                data = response.json()
+                page_results = data.get("results", [])
+                all_results.extend(page_results)
+                logger.info(f"Retrieved page {page}: {len(page_results)} documents")
+        
+        logger.info(f"Total retrieved: {len(all_results)} documents from API")
+        results = all_results
         
         # Filter and validate each document
         filtered_by_ai_check = 0
